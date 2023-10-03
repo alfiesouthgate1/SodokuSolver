@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DdlMappings">
+    <mapping uuid="4f137022-c20a-43c9-b064-994f5429ff7e" name="identifier.sqlite Mapping">
+      <data-sources db="fcc62daa-f4dc-4288-a981-f50382232c22" ddl="f094b9b6-e35c-449e-8cbf-a30684f775ca" />
+    </mapping>
+  </component>
+  <component name="SqlDataSourceStorage">
+    <option name="dataSources">
+      <list>
+        <State>
+          <option name="id" value="f094b9b6-e35c-449e-8cbf-a30684f775ca" />
+          <option name="name" value="identifier.sqlite (DDL)" />
+          <option name="dbmsName" value="SQLITE" />
+          <option name="urls">
+            <array>
+              <option value="file://$PROJECT_DIR$/SodokuSolver/schema.sql" />
+            </array>
+          </option>
+        </State>
+      </list>
+    </option>
+  </component>
+</project>
