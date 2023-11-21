@@ -3,6 +3,9 @@
   <component name="DdlMappings">
     <mapping uuid="4f137022-c20a-43c9-b064-994f5429ff7e" name="identifier.sqlite Mapping">
       <data-sources db="fcc62daa-f4dc-4288-a981-f50382232c22" ddl="f094b9b6-e35c-449e-8cbf-a30684f775ca" />
+      <scope>
+        <node kind="database" negative="1" />
+      </scope>
     </mapping>
   </component>
   <component name="SqlDataSourceStorage">
