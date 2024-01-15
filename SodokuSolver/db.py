@@ -1,23 +1,31 @@
 import sqlite3
 from sqlite3 import Error
-
-
-
-def create_user(email, pwd):
-    # conn = None
+from config import db_file
+def initialize_database():
+    sql = """CREATE TABLE IF NOT EXISTS user (email VARCHAR(20), password VARCHAR(20), PRIMARY KEY (email));"""
+    run_query(sql)
+def create_user(email, pwd, dbfile):
+    print("called with values:", email, pwd)
     try:
         sql = f"""INSERT INTO user (email, password) VALUES ('{email}', '{pwd}');"""
-        run_query(sql)
+        run_query(sql, dbfile)
     except sqlite3.Error as e:
-        raise e
+        raise ValueError("Email already in use")
 
 def get_user(email):
     sql = f"""SELECT * FROM user WHERE email == email"""
     x = run_query(sql)
     return x
 
-def update_user(email, pwd):
-    return
+def update_user(email, pwd, new_pwd):
+    if pwd == get_user(email)[0][1]:
+        try:
+            sql = f"""UPDATE user Set password = ('{new_pwd}') WHERE email == email"""
+            run_query(sql)
+        except sqlite3.Error as e:
+            raise e
+    else:
+        print("wrong password")
 
 def remove_user(email, pwd):
     if pwd == get_user(email)[0][1]:
@@ -25,7 +33,8 @@ def remove_user(email, pwd):
             sql = f"""DELETE FROM user WHERE email == email"""
             run_query(sql)
         except sqlite3.Error as e:
-            raise e
+            raise ""
+
 
 def delete_table():
     sql = f"""DELETE FROM user"""
@@ -33,12 +42,14 @@ def delete_table():
         run_query(sql)
     except sqlite3.Error as e:
         raise e
-def run_query(query):
+def run_query(query, dbfile):
     try:
-        conn = sqlite3.connect(db_file)
+        conn = sqlite3.connect(dbfile)
         cursor = conn.cursor()
+        print("executing query:", query)
         cursor.execute(query)
         conn.commit()
+        print("worked")
         return cursor.fetchall()
 
     except sqlite3.Error as e:
@@ -48,9 +59,5 @@ def run_query(query):
         conn.close()
 
 if __name__ == "__main__":
-    db_file = "../identifier.sqlite"
-    create_user("alfie@outlook.com", "hello")
-    create_user("hd@dd.com", "hi")
-    print(get_user("alfie@outlook.com")[0][1])
-    remove_user("alfie@outlook.com", "hello")
-    print(get_user("alfie@outlook.com"))2
+    create_user("wjdi@djijd.com", "djijd", db_file)
+
