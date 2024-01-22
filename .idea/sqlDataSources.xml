@@ -8,20 +8,4 @@
       </scope>
     </mapping>
   </component>
-  <component name="SqlDataSourceStorage">
-    <option name="dataSources">
-      <list>
-        <State>
-          <option name="id" value="f094b9b6-e35c-449e-8cbf-a30684f775ca" />
-          <option name="name" value="identifier.sqlite (DDL)" />
-          <option name="dbmsName" value="SQLITE" />
-          <option name="urls">
-            <array>
-              <option value="file://$PROJECT_DIR$/SodokuSolver/schema.sql" />
-            </array>
-          </option>
-        </State>
-      </list>
-    </option>
-  </component>
 </project>

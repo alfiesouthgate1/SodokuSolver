@@ -1,5 +1,5 @@
 CREATE TABLE IF NOT EXISTS user (
-	email varchar(20),
-	password varchar(20),
+	email varchar(64),
+	password varchar(64),
 	PRIMARY KEY (email)
 )
