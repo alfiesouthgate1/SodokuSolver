@@ -68,6 +68,7 @@ def submit2():
 @app.route('/deleteaccount')
 def deleteaccount():
     return render_template('deleteaccount.html')
+#Delete Account data handling
 @app.route('/submit3', methods=['POST', 'GET'])
 def submit3():
     print("called")
