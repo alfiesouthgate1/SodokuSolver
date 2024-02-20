@@ -76,6 +76,7 @@ def submit3():
         email = request.form['email']
         password = request.form['password']
         x = remove_user(email, password, db_file)
+
         print(x)
         if not x:
             error_msg = "Incorrect Email or Password"
