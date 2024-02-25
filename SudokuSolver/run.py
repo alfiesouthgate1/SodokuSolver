@@ -1,7 +1,7 @@
 from flask import Flask, request, jsonify, render_template, redirect, url_for, make_response
 from db import create_user, run_query, get_user, update_user, remove_user
 from config import db_file
-
+from solver import solve_grid, is_valid, find_empty_cell
 app = Flask(__name__)
 #HomePage
 @app.route('/')
@@ -83,5 +83,16 @@ def submit3():
             return render_template('deleteaccount.html', error_msg=error_msg)
         else:
             return redirect(url_for('success'))
+
+@app.route('/sudokusolver')
+def sudoku_solver():
+    return render_template('solver.html')
+@app.route('/solve', methods=['POST', 'GET'])
+def solve():
+    data = request.json
+    sudokugrid = data.get('grid')
+    sudokugrid = solve_grid(sudokugrid)
+    return jsonify(sudokugrid)
+
 if __name__ == '__main__':
     app.run()

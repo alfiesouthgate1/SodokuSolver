@@ -43,17 +43,17 @@ def solve_grid(grid):
 
 
 def is_valid(board, row, col, num):
-    print("Checking validity for number", num, "at position", row, ",", col)
+    # print("Checking validity for number", num, "at position", row, ",", col)
     # Check if the same number already exists in the row
     for x in range(9):
         if board[row][x] == str(num):
-            print("Invalid: Number", num, "already exists in the row.")
+            # print("Invalid: Number", num, "already exists in the row.")
             return False
 
     # Check if the same number already exists in the column
     for x in range(9):
         if board[x][col] == str(num):
-            print("Invalid: Number", num, "already exists in the column.")
+            # print("Invalid: Number", num, "already exists in the column.")
             return False
 
     # Check if the same number already exists in the 3x3 grid
@@ -62,10 +62,10 @@ def is_valid(board, row, col, num):
     for i in range(start_row, start_row + 3):
         for j in range(start_col, start_col + 3):
             if board[i][j] == str(num):
-                print("Invalid: Number", num, "already exists in the 3x3 grid.")
+                # print("Invalid: Number", num, "already exists in the 3x3 grid.")
                 return False
 
-    print("Valid: Number", num, "can be placed at position", row, ",", col)
+    # print("Valid: Number", num, "can be placed at position", row, ",", col)
     return True
 def find_empty_cell(grid):
     for i in range(9):
@@ -76,16 +76,17 @@ def find_empty_cell(grid):
 
 if __name__ == '__main__':
     grid = [
-        ["4", "7", "-", "-", "-", "2", "1", "-", "-"],
-        ["-", "5", "9", "4", "1", "8", "-", "-", "-"],
-        ["6", "-", "-", "-", "-", "-", "-", "8", "3"],
-        ["-", "-", "6", "2", "5", "-", "-", "1", "9"],
-        ["-", "2", "3", "-", "-", "1", "-", "-", "6"],
-        ["-", "-", "1", "9", "3", "-", "2", "-", "8"],
-        ["8", "-", "-", "-", "-", "-", "9", "6", "-"],
-        ["-", "6", "-", "-", "9", "5", "7", "-", "2"],
-        ["2", "-", "-", "6", "4", "-", "8", "-", "-"],
+        ["-", "-", "-", "-", "-", "-", "-", "-", "-"],
+        ["-", "-", "-", "-", "-", "-", "-", "-", "-"],
+        ["-", "-", "-", "-", "-", "-", "-", "-", "-"],
+        ["-", "-", "-", "-", "-", "-", "-", "-", "-"],
+        ["-", "-", "-", "-", "-", "-", "-", "-", "-"],
+        ["-", "-", "-", "-", "-", "-", "-", "-", "-"],
+        ["-", "-", "-", "-", "-", "-", "-", "-", "-"],
+        ["-", "-", "-", "-", "-", "-", "-", "-", "-"],
+        ["-", "-", "-", "-", "-", "-", "-", "-", "-"],
     ]
+    grid = initialise_grid(grid)
     grid = solve_grid(grid)
     for row in grid:
         print(" ".join(map(str, row)))
