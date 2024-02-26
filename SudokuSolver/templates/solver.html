@@ -6,6 +6,11 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
       integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
     <style>
+        .error-message{
+            color: red;
+            margin-top: 10px;
+            font-size: 25px;
+        }
         .container {
         display: flex;
         justify-content: center;
@@ -99,36 +104,64 @@
 
     </style>
     <script>
-        function solve_sudoku(){
+        function solve_sudoku() {
             let sudokugrid =
                 [["-", "-", "-", "-", "-", "-", "-", "-", "-"],
-                ["-", "-", "-", "-", "-", "-", "-", "-", "-" ],
-                ["-", "-", "-", "-", "-", "-", "-", "-", "-" ],
-                ["-", "-", "-", "-", "-", "-", "-", "-", "-" ],
-                ["-", "-", "-", "-", "-", "-", "-", "-", "-" ],
-                ["-", "-", "-", "-", "-", "-", "-", "-", "-" ],
-                ["-", "-", "-", "-", "-", "-", "-", "-", "-" ],
-                ["-", "-", "-", "-", "-", "-", "-", "-", "-" ],
-                ["-", "-", "-", "-", "-", "-", "-", "-", "-" ]];
-            for (let i = 0; i<9; i++){
-                for (let j = 0; j<9; j++){
+                    ["-", "-", "-", "-", "-", "-", "-", "-", "-"],
+                    ["-", "-", "-", "-", "-", "-", "-", "-", "-"],
+                    ["-", "-", "-", "-", "-", "-", "-", "-", "-"],
+                    ["-", "-", "-", "-", "-", "-", "-", "-", "-"],
+                    ["-", "-", "-", "-", "-", "-", "-", "-", "-"],
+                    ["-", "-", "-", "-", "-", "-", "-", "-", "-"],
+                    ["-", "-", "-", "-", "-", "-", "-", "-", "-"],
+                    ["-", "-", "-", "-", "-", "-", "-", "-", "-"]];
+            for (let i = 0; i < 9; i++) {
+                for (let j = 0; j < 9; j++) {
                     let cellID = `cell-${i * 9 + j}`;
                     let cellValue = document.getElementById(cellID).value.trim();
-                    if (cellValue !== ""){
+                    if (cellValue !== "") {
                         sudokugrid[i][j] = cellValue;
                     }
                 }
             }
-            let json_data = JSON.stringify({"grid": sudokugrid });
+            let json_data = JSON.stringify({"grid": sudokugrid});
             fetch('/solve', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: json_data
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: json_data
+    })
+        .then(response => response.json())
+        .then(data => {
+            console.log(data);
+            if (data.error_msg){
+                document.getElementById("error-msg").textContent = data.error_msg;
+            }
+            else{
+                document.getElementById("error-msg").textContent = "";
+                if (Array.isArray(data) && data.length === 9) {
+                    for (let x = 0; x < 9; x++) {
+                        if (Array.isArray(data[x]) && data[x].length === 9) {
+                            for (let k = 0; k < 9; k++) {
+                                let cellID = `cell-${x * 9 + k}`;
+                                document.getElementById(cellID).value = data[x][k];
+                            }
+                        } else {
+                            console.error(`Row ${x} does not have 9 columns or is not an array:`, data[x]);
+                        }
+                    }
+                } else {
+                    console.error('Invalid data format or length:', data);
+                }
+                }
             })
-            console.log(sudokugrid)
+    .catch(error => console.error('Error:', error)); // Log any errors to the console
         }
+    function reset_page(){
+            location.reload();
+    }
+
     </script>
 </head>
 <body>
@@ -253,13 +286,14 @@
             </tr>
         </table>
     </div>
+    <div id="error-msg" class="container error-message" style="color: red; margin-top: 10px;"></div>
     <div class="container solve-button" style="margin-top: 25px">
         <div class="row">
             <div class="col">
                 <button id="solve-button" class="btn btn-lg btn-primary btn-block" style="font-size: 30px;" onclick="solve_sudoku()">Solve</button>
             </div>
             <div class="col">
-                <button class="btn btn-lg btn-primary btn-block" style="font-size: 30px;">Reset</button>
+                <button class="btn btn-lg btn-primary btn-block" style="font-size: 30px;" onclick="reset_page()">Reset</button>
             </div>
         </div>
     </div>

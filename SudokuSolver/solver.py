@@ -28,7 +28,10 @@ def initialise_grid(grid):
             i+=1
     return grid
 
-def solve_grid(grid):
+def solve_grid(grid, initial_check):
+    if initial_check == False:
+        if not check_if_initially_valid(grid):
+            return None
     empty_cell = find_empty_cell(grid)
     if not empty_cell:
         return grid
@@ -36,11 +39,25 @@ def solve_grid(grid):
     for x in range(1,10):
         if is_valid(grid, row, column, x):
             grid[row][column] = str(x)
-            if solve_grid(grid):
+            if solve_grid(grid, True):
                 return grid
             grid[row][column] = "-"
-    return False
+    return None
+def check_if_initially_valid(grid):
+        def is_valid_unit(unit):
+            unit = [x for x in unit if x != '-']
+            return len(set(unit)) == len(unit)
 
+        for i in range(9):
+            if not is_valid_unit(grid[i]) or not is_valid_unit([grid[j][i] for j in range(9)]):
+                return False
+
+        for i in range(0, 9, 3):
+            for j in range(0, 9, 3):
+                if not is_valid_unit([grid[x][y] for x in range(i, i + 3) for y in range(j, j + 3)]):
+                    return False
+
+        return True
 
 def is_valid(board, row, col, num):
     # print("Checking validity for number", num, "at position", row, ",", col)
@@ -76,17 +93,20 @@ def find_empty_cell(grid):
 
 if __name__ == '__main__':
     grid = [
+        ["-", "3", "3", "-", "-", "-", "-", "-", "-"],
+        ["-", "-", "-", "1", "9", "5", "-", "-", "-"],
         ["-", "-", "-", "-", "-", "-", "-", "-", "-"],
+        ["-", "-", "-", "-", "6", "-", "-", "-", "3"],
+        ["-", "-", "-", "8", "-", "3", "-", "-", "1"],
+        ["-", "-", "-", "-", "2", "-", "-", "-", "6"],
         ["-", "-", "-", "-", "-", "-", "-", "-", "-"],
-        ["-", "-", "-", "-", "-", "-", "-", "-", "-"],
-        ["-", "-", "-", "-", "-", "-", "-", "-", "-"],
-        ["-", "-", "-", "-", "-", "-", "-", "-", "-"],
-        ["-", "-", "-", "-", "-", "-", "-", "-", "-"],
-        ["-", "-", "-", "-", "-", "-", "-", "-", "-"],
-        ["-", "-", "-", "-", "-", "-", "-", "-", "-"],
-        ["-", "-", "-", "-", "-", "-", "-", "-", "-"],
+        ["-", "-", "-", "4", "1", "9", "-", "-", "5"],
+        ["-", "-", "-", "-", "8", "-", "-", "7", "9"]
     ]
-    grid = initialise_grid(grid)
-    grid = solve_grid(grid)
-    for row in grid:
-        print(" ".join(map(str, row)))
+    grid = solve_grid(grid, False)
+    if grid is None:
+        print("No solution exists.")
+    else:
+        print("Solution:")
+        for row in grid:
+            print(" ".join(row))

@@ -36,6 +36,7 @@ def submit():
         sql = """SELECT * FROM user"""
         print(run_query(sql, db_file))
         return redirect(url_for('success'))
+
 #Check if Login data is in database
 @app.route('/submit1', methods = ['POST', 'GET'])
 def submit1():
@@ -91,8 +92,13 @@ def sudoku_solver():
 def solve():
     data = request.json
     sudokugrid = data.get('grid')
-    sudokugrid = solve_grid(sudokugrid)
-    return jsonify(sudokugrid)
-
+    result = solve_grid(sudokugrid, False)
+    if result is None:
+        error_msg = "This is unsolvable"
+        print(error_msg)
+        return jsonify({"error_msg": error_msg})
+    else:
+        sudokugrid = solve_grid(sudokugrid, False)
+        return jsonify(sudokugrid)
 if __name__ == '__main__':
     app.run()
