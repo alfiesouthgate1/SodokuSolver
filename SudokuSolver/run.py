@@ -1,8 +1,10 @@
-from flask import Flask, request, jsonify, render_template, redirect, url_for, make_response
+from flask import Flask, request, jsonify, render_template, redirect, url_for, make_response, session
 from db import create_user, run_query, get_user, update_user, remove_user
 from config import db_file
 from solver import solve_grid, is_valid, find_empty_cell
+from generator import generate_grid, easy, medium, hard
 app = Flask(__name__)
+app.secret_key = 'sudukoALFIE123'
 #HomePage
 @app.route('/')
 def hello_world():
@@ -100,5 +102,39 @@ def solve():
     else:
         sudokugrid = solve_grid(sudokugrid, False)
         return jsonify(sudokugrid)
+
+@app.route('/play')
+def play():
+    difficulty = request.args.get('difficulty')
+    return render_template('play_sudoku.html', difficulty=difficulty)
+@app.route('/playsudoku', methods=['POST'])
+def playsudoku():
+    data = request.json
+    print(data)
+    sudokugrid = data.get('grid')
+    e_m_h = data.get('difficulty')
+
+    # Convert difficulty string to corresponding integer value
+    difficulty_levels = {'1': 1, '2': 2, '3': 3}
+    difficulty = difficulty_levels.get(e_m_h)
+
+    if difficulty is not None:
+        sudokugrid = generate_grid(sudokugrid)  # Assuming this function prepares the Sudoku grid
+
+        if difficulty == 1:
+            sudokugrid = easy(sudokugrid)
+        elif difficulty == 2:
+            sudokugrid = medium(sudokugrid)
+        elif difficulty == 3:
+            sudokugrid = hard(sudokugrid)
+
+        return jsonify(sudokugrid)
+    else:
+        return jsonify({'error': 'Invalid difficulty level'}), 400
+@app.route('/difficulty')
+def difficulty():
+    return render_template('e_m_h.html')
+
+
 if __name__ == '__main__':
     app.run()
