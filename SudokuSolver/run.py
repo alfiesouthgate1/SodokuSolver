@@ -114,12 +114,11 @@ def playsudoku():
     sudokugrid = data.get('grid')
     e_m_h = data.get('difficulty')
 
-    # Convert difficulty string to corresponding integer value
     difficulty_levels = {'1': 1, '2': 2, '3': 3}
     difficulty = difficulty_levels.get(e_m_h)
 
     if difficulty is not None:
-        sudokugrid = generate_grid(sudokugrid)  # Assuming this function prepares the Sudoku grid
+        sudokugrid = generate_grid(sudokugrid)
 
         if difficulty == 1:
             sudokugrid = easy(sudokugrid)

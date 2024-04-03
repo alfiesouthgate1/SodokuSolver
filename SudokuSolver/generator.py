@@ -53,6 +53,6 @@ def hard(grid):
 
 
 grid = generate_grid(grid)
-grid = hard(grid)
+grid = easy(grid)
 for row in grid:
     print(" ".join(row))
