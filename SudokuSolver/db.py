@@ -2,16 +2,18 @@ import sqlite3
 from sqlite3 import Error
 from config import db_file
 import re
+import hashlib
+import os
 def initialize_database(db_file):
     sql = """CREATE TABLE IF NOT EXISTS user (email VARCHAR(20), password VARCHAR(20), PRIMARY KEY (email));"""
     run_query(sql, db_file)
 def create_user(email, pwd, dbfile):
-    print("called with values:", email, pwd)
     if valid_email(email):
         if valid_password(pwd):
+            hashed_pwd = hash_password(pwd)
             try:
-                sql = f"""INSERT INTO user (email, password) VALUES ('{email}', '{pwd}');"""
-                run_query(sql, dbfile)
+                sql = f"""INSERT INTO user (email, password) VALUES (?, ?);"""
+                run_query(sql, dbfile, (email, hashed_pwd))
                 return [True, ""]
             except sqlite3.Error as e:
                 return [False, "Email already in use"]
@@ -22,19 +24,25 @@ def create_user(email, pwd, dbfile):
 
 def get_user(email, pwd, dbfile):
     try:
-        sql = f"""SELECT * FROM user WHERE email = ? AND password = ?"""
-        result = run_query(sql, dbfile, (email, pwd))
-        return result
+        sql = f"""SELECT * FROM user WHERE email = ?"""
+        result = run_query(sql, dbfile, (email,))
+        if result:
+            stored_password = result[0][1]
+            if verify_password(stored_password, pwd):
+                return result
+        return []
     except sqlite3.Error as e:
         raise ValueError("didn't work")
 
 def update_user(email, pwd, new_pwd, dbfile):
     user_data = get_user(email, pwd, dbfile)
     if user_data and len(user_data) > 0 :
-        if pwd == user_data[0][1]:
+        stored_password = user_data[0][1]
+        if verify_password(stored_password, pwd):
+            hashed_new_pwd = hash_password(new_pwd)
             try:
                 sql = f"""UPDATE user Set password = ? WHERE email = ?"""
-                result = run_query(sql, dbfile, (new_pwd, email))
+                result = run_query(sql, dbfile, (hashed_new_pwd, email))
                 return True
             except sqlite3.Error as e:
                 raise e
@@ -46,7 +54,8 @@ def update_user(email, pwd, new_pwd, dbfile):
 def remove_user(email, pwd, dbfile):
     user_data = get_user(email, pwd, dbfile)
     if user_data and len(user_data) > 0:
-        if pwd == user_data[0][1]:
+        stored_password = user_data[0][1]
+        if verify_password(stored_password, pwd):
             try:
                 sql = f"""DELETE FROM user WHERE email = ?"""
                 run_query(sql, dbfile, (email,))
@@ -95,10 +104,18 @@ def valid_password(password):
         return True
     else:
         return False
-
+def hash_password(password):
+    salt = os.urandom(32)
+    key = hashlib.pbkdf2_hmac('sha256', password.encode('utf-8'), salt, 100000)
+    return salt + key
+def verify_password(stored_password, provided_password):
+    salt = stored_password[:32]
+    stored_key = stored_password[32:]
+    key = hashlib.pbkdf2_hmac('sha256', provided_password.encode('utf-8'), salt, 100000)
+    return key == stored_key
 
 if __name__ == "__main__":
-    create_user("susif9i9@mail.com", "fhfu", db_file)
+    create_user("susi3f9i9@mail.com", "fhfu", db_file)
 
 
 

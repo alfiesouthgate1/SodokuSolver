@@ -3,8 +3,14 @@ from db import create_user, run_query, get_user, update_user, remove_user
 from config import db_file
 from solver import solve_grid, is_valid, find_empty_cell
 from generator import generate_grid, easy, medium, hard
+import random
+import string
 app = Flask(__name__)
-app.secret_key = 'sudukoALFIE123'
+app.config['SESSION_COOKIE_NAME'] = 'session'
+app.config['SESSION_COOKIE_SECURE'] = True
+app.config['SESSION_COOKIE_HTTPONLY'] = True
+app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'
+app.secret_key = ''.join(random.choices(string.ascii_letters, k=32))
 #HomePage
 @app.route('/')
 def hello_world():
@@ -18,9 +24,12 @@ def signup():
 def login():
     return render_template('login.html')
 
-@app.route('/success')
-def success():
-    return render_template("success.html")
+@app.route('/choice')
+def choice():
+    if 'email' in session:
+        return render_template("choice.html")
+    else:
+        return redirect(url_for('hello_world'))
 # Get Data from Signup into database
 @app.route('/submit', methods = ['POST', 'GET'])
 def submit():
@@ -30,7 +39,8 @@ def submit():
         password = request.form['password']
         result = create_user(email, password, db_file)
         if result[0]:
-            return redirect(url_for('success'))
+            session['email'] = email
+            return redirect(url_for('choice'))
         else:
             error_msg = result[1]
             return render_template('signup.html', error_msg=error_msg)
@@ -51,7 +61,8 @@ def submit1():
             error_msg = "Incorrect Email or Password"
             return render_template('login.html', error_msg=error_msg)
         else:
-            return redirect(url_for('success'))
+            session['email'] = email
+            return redirect(url_for('choice'))
 @app.route('/changepassword')
 def change_password():
     return render_template('change_password.html')
@@ -64,7 +75,7 @@ def submit2():
         new_pwd = request.form['newpassword']
         x = update_user(email, password, new_pwd, db_file)
         if x:
-            return redirect(url_for('success'))
+            return redirect(url_for('hello_world'))
         else:
             error_msg = "Incorrect Email or Password"
             return render_template('change_password.html', error_msg=error_msg)
@@ -85,11 +96,14 @@ def submit3():
             error_msg = "Incorrect Email or Password"
             return render_template('deleteaccount.html', error_msg=error_msg)
         else:
-            return redirect(url_for('success'))
+            return redirect(url_for('hello_world'))
 
 @app.route('/sudokusolver')
 def sudoku_solver():
-    return render_template('solver.html')
+    if 'email' in session:
+        return render_template('solver.html')
+    else:
+        return redirect(url_for('hello_world'))
 @app.route('/solve', methods=['POST', 'GET'])
 def solve():
     data = request.json
@@ -132,8 +146,14 @@ def playsudoku():
         return jsonify({'error': 'Invalid difficulty level'}), 400
 @app.route('/difficulty')
 def difficulty():
-    return render_template('e_m_h.html')
-
+    if 'email' in session:
+        return render_template('e_m_h.html')
+    else:
+        return redirect(url_for('hello_world'))
+@app.route('/logout')
+def logout():
+    session.pop('email', None)
+    return redirect(url_for('hello_world'))
 
 if __name__ == '__main__':
     app.run()
