@@ -8,15 +8,15 @@
         body {
             background: linear-gradient(rgba(0, 0, 0, 0.4) 1px, transparent 1px),
             linear-gradient(90deg, rgba(0, 0, 0, 0.4) 1px, transparent 1px);
-            background-size: 120px 120px; /* Adjust the size of the grid squares */
-            background-position: -1px -1px; /* Adjust the starting position to create the grid effect */
+            background-size: 120px 120px;
+            background-position: -1px -1px;
             color: white;
         }
     </style>
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <a class="navbar-brand" href="{{ url_for('hello_world') }}" style="margin-left: 20px;">Home</a>
+        <a class="navbar-brand" href="{{ url_for('home') }}" style="margin-left: 20px;">Home</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false"
                 aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>

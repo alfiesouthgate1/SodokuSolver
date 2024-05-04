@@ -29,17 +29,19 @@ def initialise_grid(grid):
     return grid
 
 def solve_grid(grid, initial_check):
+    # First checks if the inputted grid was invalid
     if initial_check == False:
         if not check_if_initially_valid(grid):
             return None
+    # Finds next empty cell
     empty_cell = find_empty_cell(grid)
-    if not empty_cell:
+    if not empty_cell: #If there is no empty cells left
         return grid
     row, column = empty_cell
     for x in range(1,10):
-        if is_valid(grid, row, column, x):
+        if is_valid(grid, row, column, x): #Checks if the number can be placed there
             grid[row][column] = str(x)
-            if solve_grid(grid, True):
+            if solve_grid(grid, True): #Backtracks to solve function until solved
                 return grid
             grid[row][column] = "-"
     return None
@@ -60,17 +62,14 @@ def check_if_initially_valid(grid):
         return True
 
 def is_valid(board, row, col, num):
-    # print("Checking validity for number", num, "at position", row, ",", col)
     # Check if the same number already exists in the row
     for x in range(9):
         if board[row][x] == str(num):
-            # print("Invalid: Number", num, "already exists in the row.")
             return False
 
     # Check if the same number already exists in the column
     for x in range(9):
         if board[x][col] == str(num):
-            # print("Invalid: Number", num, "already exists in the column.")
             return False
 
     # Check if the same number already exists in the 3x3 grid
@@ -79,12 +78,11 @@ def is_valid(board, row, col, num):
     for i in range(start_row, start_row + 3):
         for j in range(start_col, start_col + 3):
             if board[i][j] == str(num):
-                # print("Invalid: Number", num, "already exists in the 3x3 grid.")
                 return False
 
-    # print("Valid: Number", num, "can be placed at position", row, ",", col)
     return True
 def find_empty_cell(grid):
+    # Finds next cell with "-"
     for i in range(9):
         for j in range(9):
             if grid[i][j] == "-":

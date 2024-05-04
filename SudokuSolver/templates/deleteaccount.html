@@ -30,7 +30,7 @@
   </head>
   <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <a class="navbar-brand" href="{{ url_for('hello_world') }}" style="margin-left: 20px;">Home</a>
+        <a class="navbar-brand" href="{{ url_for('home') }}" style="margin-left: 20px;">Home</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
@@ -61,7 +61,7 @@
         Delete Account
     </div>
     <div class = "text-center mt-5">
-        <form style="max-width:480px; margin:auto; margin-top: 125px;"action = "/submit3" method = "post">
+        <form style="max-width:480px; margin:auto; margin-top: 125px;" action = "/deleteaccount1" method = "post">
             <label for="email" class="sr-only"></label>
             <input type="email" id="email" name="email" class="form-control border-dark p-3" placeholder="Email Address"
                    autofocus>
