@@ -1,3 +1,2 @@
 # SodokuSolver
-This is my A-Level Coursework
-I am making a Sodoku Solver website
+This is a Sudoku Website where users can either play Sudoku or Solve Sudokus. This is coded using python flask and HTML
